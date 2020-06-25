@@ -132,24 +132,14 @@ def list_sorter(transformations, N):
     Returns a list of symmetries sorted into lists by hamming distance'''
     sorted_list = []
     for length in range(2, N):
-        if length%2 != 0:
-            one_length = []
-            for transformation in transformations:
-                array = transformation[0]
-                if array.size == length:
-                        one_length.append(transformation)
-                else:
-                    continue
-            sorted_list.append(one_length)
-        else:
-            one_length = []
-            for transformation in transformations:
-                array = transformation[0]
-                if array.size == length:
-                        one_length.append(transformation)
-                else:
-                    continue
-            sorted_list.append(one_length)
+        one_length = []
+        for transformation in transformations:
+            array = transformation[0]
+            if array.size == length:
+                    one_length.append(transformation)
+            else:
+                continue
+        sorted_list.append(one_length)
     return sorted_list
 
 
@@ -170,11 +160,9 @@ def remove_combo(sorted_list):
             if (array == array2).any() or array[0]==array2[1] or array[1]==array2[0]:
                 continue
             else:
-                #print 't: ',transformation, ' t2: ', transformation2
                 combo = np.concatenate((array, array2))
                 sorted_indices = np.argsort(combo)
                 sorted_combo = combo[sorted_indices]
-                #print 'sort combo: ', sorted_combo
     
                 for arr in transformation[1:]:
             
@@ -232,7 +220,7 @@ def symmetry_sorter(symmetries, sortedsym):
                 other.append(transformation)
     if len(swap_symmetries) != 0:
         print 'swap_symmetries: ', swap_symmetries
-    if len(swap_symmetries) != 0:
+    if len(anti_swap) != 0:
         print 'anti_swap: ', anti_swap
     if len(other) != 0:
         print 'other: ', other
