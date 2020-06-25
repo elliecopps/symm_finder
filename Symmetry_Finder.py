@@ -49,5 +49,3 @@ sorted_sym = symmetry_types.main(seed, N)
 
 classified_sym = sym_mod.symmetry_sorter(simplified_sym, sorted_sym)
 
-#if __name__ == "__main__":
-    #print classified_sym
