@@ -122,6 +122,8 @@ def symmetry(transformation_list, grouped_configs, basis):
                             break
                 if repeat == False:
                     symm_list.append(transformation)
+    if len(symm_list)==0:
+        print 'No Symmetries'
                         
     return symm_list
 
@@ -218,6 +220,7 @@ def symmetry_sorter(symmetries, sortedsym):
                 anti_swap.append(transformation)
             else:
                 other.append(transformation)
+                
     if len(swap_symmetries) != 0:
         print 'swap_symmetries: ', swap_symmetries
     if len(anti_swap) != 0:
