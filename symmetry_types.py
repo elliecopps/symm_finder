@@ -15,9 +15,9 @@ Modified from Asher's symcheck.py
 
 def main(seed, N):
     
-    args = easydict.EasyDict({'cs':2})
+    #args = easydict.EasyDict({'cs':2})
 
-    clustersize = args.cs
+    clustersize = 2
 
     seeds = [seed]
 
