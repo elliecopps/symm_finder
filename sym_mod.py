@@ -39,10 +39,10 @@ def list_transformations(grouped_configs, max_energy, N, basis):
     returns a list of all transformations that occur in each energy level 
     
     when only finding transformations for a few energy levels, the ground state corresponds to max_energy=1, using
-    'all' will go through all energy levels"""
+    max_energy=0 will go through all energy levels"""
     
     transformation_list = []
-    if max_energy == 'all':
+    if max_energy == 0:
         max_energy = len(grouped_configs)
     for entry in grouped_configs[:max_energy]:
         single_list = []
