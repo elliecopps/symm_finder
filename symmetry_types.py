@@ -3,7 +3,6 @@ import numpy as np
 import itertools as it
 import energies as en
 import argparse
-import easydict
 
 
 
@@ -15,8 +14,6 @@ Modified from Asher's symcheck.py
 
 def main(seed, N):
     
-    #args = easydict.EasyDict({'cs':2})
-
     clustersize = 2
 
     seeds = [seed]
