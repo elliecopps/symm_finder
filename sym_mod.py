@@ -69,12 +69,12 @@ def list_transformations(grouped_configs, max_energy, N, basis):
                         transformation = [nonzero, substate1, substate2]
                         single_list.append(transformation)
 
-                        
-                    #single_list.append(transformation)
         transformation_list.append(single_list)       
-        #a list with nonzero array, then the integers from the binary number formed by applying the nonzero array
+        
     return transformation_list
 
+
+'''The symmetry function is taking a decent amount of time up'''
 
 def symmetry(transformation_list, grouped_configs, basis):
     """function takes in a list of all transformations grouped by energy level and grouped_configs and returns a
@@ -95,7 +95,7 @@ def symmetry(transformation_list, grouped_configs, basis):
             
             is_a_symmetry = True
             
-            for energy_level2 in grouped_configs[:]: #used to start at level_index I think
+            for energy_level2 in grouped_configs:
                 if  not is_a_symmetry: 
                     break
                 
@@ -146,7 +146,7 @@ def list_sorter(transformations, N):
 
 
 
-def remove_combo(sorted_list):
+def remove_combo(sorted_list, basis):
     '''Function removes transformations of Hamming distance 4 that are combinations of hamming distance 2 transformations
     Eventually, I might modify it to remove combinations that are longer though that might not become a big enough issue
     Input must be a list with Hamming distance 2 at index 0 and distance 4 at index 1'''
