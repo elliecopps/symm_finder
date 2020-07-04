@@ -13,7 +13,7 @@ Modified from Asher's symcheck.py
 
 
 def main(seed, N):
-
+    
     clustersize = 2
 
     seeds = [seed]
@@ -24,7 +24,7 @@ def main(seed, N):
         anti_swap_symmetries = []
 
         symsy = 0
-        for clustersize in range(1, N/2 - 1):
+        for clustersize in range(1, N-2):
             if clustersize == N/2:
                 continue
 
@@ -79,12 +79,9 @@ def main(seed, N):
                     if anti_swap:
                         symsy = clustersize
                         anti_swap_symmetries.append(p)
-                        
-        #print swap_symmetries
-        #print anti_swap_symmetries
-                        
 
     return swap_symmetries, anti_swap_symmetries
+
 
 
 def makeJij(G,N):
@@ -96,5 +93,6 @@ def makeJij(G,N):
 		for i in range(N):
 			Jij[i][(i-j+N-1) % N] = Jij[(i-j+N-1) % N][i] = G[j][i]
 	return Jij
+
 
 
