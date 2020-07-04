@@ -47,10 +47,13 @@ def main():
         simplified_sym = sym_mod.remove_combo(sorted_list, basis)
 
         sorted_sym = symmetry_types.main(seed, N)
+        #print sorted_sym
         
         classified_sym = sym_mod.symmetry_sorter(simplified_sym, sorted_sym)
         
         print ' '
         
 
-cProfile.run('main()')
+#cProfile.run('main()')
+if __name__ == '__main__':
+    main()
