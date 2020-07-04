@@ -74,7 +74,6 @@ def list_transformations(grouped_configs, max_energy, N, basis):
     return transformation_list
 
 
-'''The symmetry function is taking a decent amount of time up'''
 
 def symmetry(transformation_list, grouped_configs, basis):
     """function takes in a list of all transformations grouped by energy level and grouped_configs and returns a
