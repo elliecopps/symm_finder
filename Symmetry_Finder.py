@@ -32,8 +32,10 @@ def main():
         print 'Seed: ', seed
 
         Jij = tfim.Jij_instance(N,J,dist="bimodal",seed=seed,even=True)
+        
+        Energies = -1 * (tfim.JZZ_SK_ME(basis,Jij))
 
-        grouped_configurations = sym_mod.grouped_configs(basis, Jij)
+        grouped_configurations = sym_mod.grouped_configs(Energies)
 
         transformations = sym_mod.list_transformations(grouped_configurations, max_energy, N, basis)
 

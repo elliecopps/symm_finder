@@ -8,10 +8,10 @@ import numpy as np
 from itertools import groupby
 import symmetry_types
 
-def grouped_configs(basis, Jij):
+def grouped_configs(Energies):
     '''function returns arrays of integers that have the same energy when converted to 
     spin configurations. excludes integers that are spin inversions of each other'''
-    Energies = -1 * (tfim.JZZ_SK_ME(basis,Jij))
+    
     sorted_indices = np.argsort(Energies)
     sorted_energies = Energies[sorted_indices]
     
