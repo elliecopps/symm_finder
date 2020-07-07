@@ -5,3 +5,5 @@ The sym_mod.py file contains all of the functions that are used in the main Symm
 From the command line, python Symmetry_Finder.py will run the function. The command line arguments are N, seed, # of seeds to test, and maximum energy level. To test only the ground state, max_energy should be 1. 0 will test all energy levels.
 
 Currently, the function only returns symmetries and transformations with a hamming distance less than N/2. It also throws out any transformations of hamming distance 4 that consist of two transformations of hamming distance 2. In the future, we may add functionality to throw out higher-order combinations and to find symmetries with greater hamming distances.
+
+Must be running python 2.
