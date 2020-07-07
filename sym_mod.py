@@ -36,42 +36,73 @@ def grouped_configs(Energies):
 
 def list_transformations(grouped_configs, max_energy, N, basis):
     """function takes in grouped_configs, which is a list of configuration integers grouped by energy level, and
-    returns a list of all transformations that occur in each energy level 
-    
+    returns a list of all transformations that occur in each energy level
     when only finding transformations for a few energy levels, the ground state corresponds to max_energy=1, using
     max_energy=0 will go through all energy levels"""
     
     transformation_list = []
+    degen_list = []
     if max_energy == 0:
         max_energy = len(grouped_configs)
     for entry in grouped_configs[:max_energy]:
         single_list = []
-         
-        if len(entry)>1: 
-            index = 0
-            for num in entry[:-1]:
-                index = index + 1
-                num = basis.state(num)
-                
-                for num2 in entry[index:]:
-                    
-                    num2 = basis.state(num2)
-                    diff = num - num2
-                    
-                    nonzero = np.nonzero(diff)[0]
-                    if nonzero.size > N/2:         #This is the piece that will throw out hamming distances greater than N/2
-                        continue
-                        
-                    else:
-                        substate1 = basis.index(num[nonzero])
-                        substate2 = basis.index(num2[nonzero])
-
-                        transformation = [nonzero, substate1, substate2]
-                        single_list.append(transformation)
-
-        transformation_list.append(single_list)       
         
-    return transformation_list
+        if max_energy == 1:
+            if len(entry)>1:
+                #index = 0
+                #for num in entry[:-1]:
+                    #index = index + 1
+                    
+                for index, num1 in enumerate(entry[:-1]):
+                    
+                    bas = basis.state(num1)
+                    
+                    for num2 in entry[index+1 : ]:
+                        bas2 = basis.state(num2)
+                        diff = bas - bas2
+                        
+                        nonzero = np.nonzero(diff)[0]
+                        if nonzero.size > N/2:         #This is the piece that will throw out hamming distances greater than N/2
+                            continue
+                            
+                        else:
+                            substate1 = basis.index(bas[nonzero])
+                            substate2 = basis.index(bas2[nonzero])
+
+                            transformation = [nonzero, substate1, substate2]
+                            degen_list.append([num1, num2, transformation])
+                            single_list.append(transformation)
+
+            transformation_list.append(single_list)
+        else:
+            if len(entry)>1:
+                #index = 0
+                #for num in entry[:-1]:
+                    #index = index + 1
+                    
+                for index, num in enumerate(entry[:-1]):
+                
+                    num = basis.state(num)
+                    
+                    for num2 in entry[index+1 : ]:
+                        num2 = basis.state(num2)
+                        diff = num - num2
+                        
+                        nonzero = np.nonzero(diff)[0]
+                        if nonzero.size > N/2:         #This is the piece that will throw out hamming distances greater than N/2
+                            continue
+                            
+                        else:
+                            substate1 = basis.index(num[nonzero])
+                            substate2 = basis.index(num2[nonzero])
+
+                            transformation = [nonzero, substate1, substate2]
+                            single_list.append(transformation)
+
+            transformation_list.append(single_list)
+        print degen_list
+        
+    return transformation_list, degen_list
 
 
 
@@ -227,7 +258,34 @@ def symmetry_sorter(symmetries, sortedsym):
     if len(other) != 0:
         print 'other: ', other
     return swap_symmetries, anti_swap, other
-
+    
+    
+def degen_sym(degen_list, sorted_sym):
+    '''Takes a list of ground state transformations and returns the ground states that are related to each other by symmetries, excluding transformations with a hamming distance greater than N/2'''
+    swaps = sorted_sym[0]
+    antiswaps = sorted_sym[1]
+    others = sorted_sym[2]
+    degen_pairs = []
+    for sym in swaps:
+        for sym2 in degen_list[:len(degen_list)//2]:
+            if np.array_equal(sym2[2][0], sym[0]) and sym2[2][1] == sym[1]:
+                degen_pairs.append(sym2)
+            else:
+                continue
+    for sym in antiswaps:
+        for sym2 in degen_list[:len(degen_list)//2]:
+            if np.array_equal(sym2[2][0], sym[0]) and sym2[2][1] == sym[1]:
+                degen_pairs.append(sym2)
+            else:
+                continue
+    for sym in others:
+        for sym2 in degen_list[:len(degen_list)//2]:
+            if np.array_equal(sym2[2][0], sym[0]) and sym2[2][1] == sym[1]:
+                degen_pairs.append(sym2)
+            else:
+                continue
+    return degen_pairs
+                
 
 
 
