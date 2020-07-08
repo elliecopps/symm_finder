@@ -100,7 +100,6 @@ def list_transformations(grouped_configs, max_energy, N, basis):
                             single_list.append(transformation)
 
             transformation_list.append(single_list)
-        print degen_list
         
     return transformation_list, degen_list
 
@@ -260,33 +259,97 @@ def symmetry_sorter(symmetries, sortedsym):
     return swap_symmetries, anti_swap, other
     
     
-def degen_sym(degen_list, sorted_sym):
-    '''Takes a list of ground state transformations and returns the ground states that are related to each other by symmetries, excluding transformations with a hamming distance greater than N/2'''
+def degen_sym(degen_list, ground_configs, sorted_sym):
+    '''Takes a list of ground state transformations and returns a matrix with ones where two states are related by a symmetry or are inverses of one another'''
     swaps = sorted_sym[0]
     antiswaps = sorted_sym[1]
     others = sorted_sym[2]
     degen_pairs = []
     for sym in swaps:
-        for sym2 in degen_list[:len(degen_list)//2]:
+        for sym2 in degen_list:
             if np.array_equal(sym2[2][0], sym[0]) and sym2[2][1] == sym[1]:
                 degen_pairs.append(sym2)
             else:
                 continue
     for sym in antiswaps:
-        for sym2 in degen_list[:len(degen_list)//2]:
+        for sym2 in degen_list:
             if np.array_equal(sym2[2][0], sym[0]) and sym2[2][1] == sym[1]:
                 degen_pairs.append(sym2)
             else:
                 continue
     for sym in others:
-        for sym2 in degen_list[:len(degen_list)//2]:
+        for sym2 in degen_list:
             if np.array_equal(sym2[2][0], sym[0]) and sym2[2][1] == sym[1]:
                 degen_pairs.append(sym2)
             else:
                 continue
-    return degen_pairs
                 
+    d = len(ground_configs)
+    degen_matrix = np.zeros((d, d), dtype=int)
+    print degen_pairs
+    
+    states = ground_configs.tolist()
+    
+    for pair in degen_pairs:
+        ind1 = states.index(pair[0])
+        ind2 = states.index(pair[1])
+        degen_matrix[ind1, ind2] = 1
+        degen_matrix[ind2, ind1] = 1
+    for state in states:
+        index = states.index(state)
+        degen_matrix[index, -(index+1)] = 1
+    
+    print degen_matrix
+   
+    return degen_matrix
+    
 
+def cluster(degen_matrix, ground_configs):
+    '''Takes the matrix from degen_sym and clusters the ground states into groups that are related by symmetries'''
+    cluster_list = []
+    d = len(ground_configs)
+    
+    for i in range (0, d):
+        new_cluster = []
+        for j in range(i+1, d):
+            if degen_matrix[i, j] == 1:
+                int1 = ground_configs[i]
+                int2 = ground_configs[j]
+                
+                if len(cluster_list) == 0:
+                    if int1 not in new_cluster:
+                        new_cluster.append(int1)
+                    if int2 not in new_cluster:
+                        new_cluster.append(int2)
+                else:
+                    repeat1 = False
+                    repeat2 = False
+                    for cluster in cluster_list:
+                        if int1 in cluster:
+                            repeat1 = True
+                            if int2 not in cluster:
+                                cluster.append(int2)
+                                repeat2 = True
+                        if int2 in cluster:
+                            repeat2 = True
+                            if int1 not in cluster:
+                                cluster.append(int1)
+                                repeat1 = True
+                    if int1 in new_cluster:
+                        repeat1 = True
+                    if int2 in new_cluster:
+                        repeat2 = True
+                        
+                    if repeat1 == False:
+                        new_cluster.append(int1)
+                    if repeat2 == False:
+                        new_cluster.append(int2)
+                        
+        if len(new_cluster) != 0:
+            cluster_list.append(new_cluster)
+
+    return cluster_list
+                
 
 
 
