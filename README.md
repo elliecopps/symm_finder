@@ -1,11 +1,9 @@
 # symm_finder
-The sym_mod file contains all of the functions used to find symmetries in systems of spins.
 
-Running Symmetry_Finder.py from the command line will return symmetries broked into the categories swap, anti_swap, and other
-  Arguments: N, seed, # of seeds to test beyond the first one, max_energy
-  N = number of spins in system
-  seed = the seed corresponding to a particular Jij matrix
-  The # of seeds specifies how many consecutive seeds you want to test for symmetries
-  A max_energy of 0 corresponds to checking all energies, 1 corresponds to checking only the ground state
+The sym_mod.py file contains all of the functions that are used in the main Symmetry_Finder.py file
 
-sym_mod.pyc is a Jupyter Notebook with all of the functions that I use.
+From the command line, python Symmetry_Finder.py will run the function. The command line arguments are N, seed, # of seeds to test, and maximum energy level. To test only the ground state, max_energy should be 1. 0 will test all energy levels.
+
+Currently, the function only returns symmetries and transformations with a hamming distance less than N/2. It also throws out any transformations of hamming distance 4 that consist of two transformations of hamming distance 2. In the future, we may add functionality to throw out higher-order combinations and to find symmetries with greater hamming distances.
+
+Must be running python 2.
