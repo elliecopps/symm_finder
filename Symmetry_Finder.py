@@ -7,6 +7,7 @@ import symmetry_types
 import argparse
 import tfim
 import cProfile
+import json
 
 def main():
     parser = argparse.ArgumentParser()
@@ -27,8 +28,13 @@ def main():
     J = 1
     basis = tfim.IsingBasis(lattice)
     
-    f = open("symmetries.txt", "w+")
-    g = open("degeneracies.txt", "w+")
+    f = open("symmetries.json", "w+") #file containing seeds with the symmetries sorted by type
+    g = open("degeneracies.json", "w+") #contains seeds and ground state clusters
+    h = open("groun_sym.json", "w+") #contains seed and all symmetries of ground states sorted by type
+    
+    f_list = []
+    g_list = []
+    h_list = []
 
     for seed in range(seed, (seed+seed_range)):
 
@@ -55,19 +61,35 @@ def main():
         sorted_sym = symmetry_types.main(seed, N)
         
         classified_sym = sym_mod.symmetry_sorter(simplified_sym, sorted_sym)
-        f.write(str(seed)+'\n')
-        f.write(str(classified_sym)+'\n')
+        symm_data = [seed, classified_sym]
+        f_list.append(symm_data)
         
-        if max_energy == 1:
-            degen_matrix = sym_mod.degen_sym(transformations[1], grouped_configurations[0], classified_sym)
-            
-            clusters = sym_mod.cluster(degen_matrix, grouped_configurations[0])
-            if len(clusters) != 0:
-                g.write(str(seed) + '\n')
-                g.write(str(clusters) + '\n')
+        degen = (sym_mod.degen_sym(transformations[1], grouped_configurations[0], classified_sym))
+        vector = sym_mod.sym_vector(degen[0])
+        clusters = sym_mod.cluster(vector, grouped_configurations[0])
+        
+        ground_symm = [seed, degen[1]]
+        h_list.append(ground_symm)
+        
+        seed_w_clusters = [seed,clusters]
+        g_list.append(seed_w_clusters)
+    
+    g.write(json.dumps(g_list))
+    f.write(json.dumps(f_list))
+    h.write(json.dumps(h_list))
     f.close()
     g.close()
+    h.close()
 
 #cProfile.run('main()')
 if __name__ == '__main__':
     main()
+    
+'''
+q = open("degeneracies.json")
+data = json.load(q)
+print data
+'''
+#data is a list of lists containing the seed and the ground state clusters
+
+
