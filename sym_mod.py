@@ -8,6 +8,7 @@ import numpy as np
 from itertools import groupby
 import symmetry_types
 
+
 def grouped_configs(Energies):
     '''function returns arrays of integers that have the same energy when converted to 
     spin configurations. excludes integers that are spin inversions of each other'''
@@ -243,6 +244,7 @@ def symmetry_sorter(symmetries, sortedsym):
     for length in symmetries:
         for transformation in length:
             array = tuple(transformation[0])
+            transformation[0] = transformation[0].tolist() #convert array to list for json
             if array in sorted_swap:
                 swap_symmetries.append(transformation)
             elif array in sorted_antiswap:
@@ -265,31 +267,42 @@ def degen_sym(degen_list, ground_configs, sorted_sym):
     antiswaps = sorted_sym[1]
     others = sorted_sym[2]
     degen_pairs = []
+    ground_swap = []
+    ground_anti_swap = []
+    ground_other = []
     for sym in swaps:
         for sym2 in degen_list:
             if np.array_equal(sym2[2][0], sym[0]) and sym2[2][1] == sym[1]:
-                degen_pairs.append(sym2)
+                degen_pairs.append([sym2[0], sym2[1]])
+                if type(sym2[2][0]) == np.ndarray:
+                    sym2[2][0] = sym2[2][0].tolist()
+                ground_swap.append(sym2)
             else:
                 continue
     for sym in antiswaps:
         for sym2 in degen_list:
             if np.array_equal(sym2[2][0], sym[0]) and sym2[2][1] == sym[1]:
-                degen_pairs.append(sym2)
+                degen_pairs.append([sym2[0], sym2[1]])
+                if type(sym2[2][0]) == np.ndarray:
+                    sym2[2][0] = sym2[2][0].tolist()
+                ground_anti_swap.append(sym2)
             else:
                 continue
     for sym in others:
         for sym2 in degen_list:
             if np.array_equal(sym2[2][0], sym[0]) and sym2[2][1] == sym[1]:
-                degen_pairs.append(sym2)
+                degen_pairs.append([sym2[0], sym2[1]])
+                if type(sym2[2][0]) == np.ndarray:
+                    sym2[2][0] = sym2[2][0].tolist()
+                print type(sym2[2][0])
+                ground_other.append(sym2)
             else:
                 continue
-                
     d = len(ground_configs)
     degen_matrix = np.zeros((d, d), dtype=int)
-    print degen_pairs
-    
+    ground_symm = [ground_swap, ground_anti_swap, ground_other]
+     
     states = ground_configs.tolist()
-    
     for pair in degen_pairs:
         ind1 = states.index(pair[0])
         ind2 = states.index(pair[1])
@@ -298,59 +311,42 @@ def degen_sym(degen_list, ground_configs, sorted_sym):
     for state in states:
         index = states.index(state)
         degen_matrix[index, -(index+1)] = 1
+    return degen_matrix, ground_symm
+     
+def sym_vector(degen_matrix):
+    D = degen_matrix.shape[0]
+    vector = -1 * np.ones(D)
+    for d, row in enumerate(degen_matrix):
+        connected = np.append(np.nonzero(row)[0], d)
+        assigned = vector[connected][np.nonzero(vector[connected]>-1)[0]]
+        vector[connected] = d
+        for label in assigned:
+            vector[np.nonzero(vector==label)[0]] = d
+    return vector
     
-    print degen_matrix
+def cluster(vector, ground_configs):
+    sorted_indices = np.argsort(vector)
+    sorted_configs = ground_configs[sorted_indices]
+    sorted_vector = vector[sorted_indices]
+
+    split_list = []
+    for key, group in groupby(sorted_vector):
+        split_list.append(list(group))
+    
+    num_list = []
+    for x in range(0, len(split_list)):
+        index = 0
+        for y in range(0, x+1):
+            index = index + len(split_list[y])
+        start = (index - len(split_list[x]))
+        entry = sorted_configs[start:index]
+        entry.sort()
+        entry = entry.tolist()
+        num_list.append(entry)
+    print num_list
+    return num_list
+  
+    
    
-    return degen_matrix
-    
-
-def cluster(degen_matrix, ground_configs):
-    '''Takes the matrix from degen_sym and clusters the ground states into groups that are related by symmetries'''
-    cluster_list = []
-    d = len(ground_configs)
-    
-    for i in range (0, d):
-        new_cluster = []
-        for j in range(i+1, d):
-            if degen_matrix[i, j] == 1:
-                int1 = ground_configs[i]
-                int2 = ground_configs[j]
-                
-                if len(cluster_list) == 0:
-                    if int1 not in new_cluster:
-                        new_cluster.append(int1)
-                    if int2 not in new_cluster:
-                        new_cluster.append(int2)
-                else:
-                    repeat1 = False
-                    repeat2 = False
-                    for cluster in cluster_list:
-                        if int1 in cluster:
-                            repeat1 = True
-                            if int2 not in cluster:
-                                cluster.append(int2)
-                                repeat2 = True
-                        if int2 in cluster:
-                            repeat2 = True
-                            if int1 not in cluster:
-                                cluster.append(int1)
-                                repeat1 = True
-                    if int1 in new_cluster:
-                        repeat1 = True
-                    if int2 in new_cluster:
-                        repeat2 = True
-                        
-                    if repeat1 == False:
-                        new_cluster.append(int1)
-                    if repeat2 == False:
-                        new_cluster.append(int2)
-                        
-        if len(new_cluster) != 0:
-            cluster_list.append(new_cluster)
-
-    return cluster_list
-                
-
-
-
-
+   
+   
