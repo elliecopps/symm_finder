@@ -152,8 +152,8 @@ def symmetry(transformation_list, grouped_configs, basis):
                             break
                 if repeat == False:
                     symm_list.append(transformation)
-    if len(symm_list)==0:
-        print 'No Symmetries'
+    #if len(symm_list)==0:
+        #print 'No Symmetries'
                         
     return symm_list
 
@@ -252,12 +252,12 @@ def symmetry_sorter(symmetries, sortedsym):
             else:
                 other.append(transformation)
                 
-    if len(swap_symmetries) != 0:
-        print 'swap_symmetries: ', swap_symmetries
-    if len(anti_swap) != 0:
-        print 'anti_swap: ', anti_swap
-    if len(other) != 0:
-        print 'other: ', other
+    #if len(swap_symmetries) != 0:
+        #print 'swap_symmetries: ', swap_symmetries
+    #if len(anti_swap) != 0:
+        #print 'anti_swap: ', anti_swap
+    #if len(other) != 0:
+        #print 'other: ', other
     return swap_symmetries, anti_swap, other
     
     
@@ -294,7 +294,6 @@ def degen_sym(degen_list, ground_configs, sorted_sym):
                 degen_pairs.append([sym2[0], sym2[1]])
                 if type(sym2[2][0]) == np.ndarray:
                     sym2[2][0] = sym2[2][0].tolist()
-                print type(sym2[2][0])
                 ground_other.append(sym2)
             else:
                 continue
@@ -343,7 +342,6 @@ def cluster(vector, ground_configs):
         entry.sort()
         entry = entry.tolist()
         num_list.append(entry)
-    print num_list
     return num_list
   
     
