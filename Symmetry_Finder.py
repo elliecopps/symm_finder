@@ -28,9 +28,9 @@ def main():
     J = 1
     basis = tfim.IsingBasis(lattice)
     
-    f = open("symmetries.json", "w+") #file containing seeds with the symmetries sorted by type
-    g = open("degeneracies.json", "w+") #contains seeds and ground state clusters
-    h = open("groun_sym.json", "w+") #contains seed and all symmetries of ground states sorted by type
+    f = open("symmetries.txt", "w+") #file containing seeds with the symmetries sorted by type
+    g = open("degeneracies.txt", "w+") #contains seeds and ground state clusters
+    h = open("groun_sym.txt", "w+") #contains seed and all symmetries of ground states sorted by type
     
     f_list = []
     g_list = []
@@ -86,7 +86,7 @@ if __name__ == '__main__':
     main()
     
 '''
-q = open("degeneracies.json")
+q = open("degeneracies.txt")
 data = json.load(q)
 print data
 '''
