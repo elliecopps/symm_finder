@@ -34,9 +34,9 @@ def main():
     # file containing seeds with the symmetries sorted by type
     f = open("data/"+str(N)+"/symmetries"+str(seed)+"-"+str(seed+seed_range)+".txt", "w+")
     # contains seeds and ground state clusters
-    g = open("data/"+str(N)+"/degeneracies.txt"+str(seed)+"-"+str(seed+seed_range)+".txt", "w+")
+    g = open("data/"+str(N)+"/degeneracies"+str(seed)+"-"+str(seed+seed_range)+".txt", "w+")
     # contains seed and all symmetries of ground states sorted by type
-    h = open("data/"+str(N)+"/groun_sym.txt"+str(seed)+"-"+str(seed+seed_range)+".txt", "w+")
+    h = open("data/"+str(N)+"/groun_sym"+str(seed)+"-"+str(seed+seed_range)+".txt", "w+")
 
     f_list = []
     g_list = []
