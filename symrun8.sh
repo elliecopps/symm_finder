@@ -1,6 +1,5 @@
 #!/usr/bin/env bash
 # Simple array job sample
-
 # Set SLURM options
 #SBATCH --job-name=array_factor                 # Job name
 #SBATCH --output=array_factor-%A-%a.out        # Standard output and error log
@@ -20,5 +19,6 @@ echo "Starting: "`date +"%D %T"`
 
 # Your calculations here
 python Symmetry_Finder.py -N 8 -seed ${SLURM_ARRAY_TASK_ID} -seed_range 1000 -max_energy 1
+
 # End of job info
 echo "Ending:   "`date +"%D %T"`

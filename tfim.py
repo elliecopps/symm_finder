@@ -9,7 +9,7 @@
 """
 
 import numpy as np
-import progressbar
+# import progressbar
 
 
 # Global constants
@@ -216,9 +216,9 @@ def JZZ_SK_ME(basis,J):
         --JZZ = \sum_{i,j} J_{ij}\sigma^z_i \sigma^z_j"""
     
     JZZ = np.zeros(basis.M)
-    bar = progressbar.ProgressBar()
+    # bar = progressbar.ProgressBar()
     shift_state = np.zeros(basis.N,dtype=int)
-    for b in bar(range(basis.M)):
+    for b in range(basis.M):
         state = basis.spin_state(b)
         for shift in range(1,basis.N//2+1):
             shift_state[shift:] = state[:-shift]
