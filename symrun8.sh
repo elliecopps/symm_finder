@@ -1,5 +1,24 @@
-#!/bin/bash
+#!/usr/bin/env bash
+# Simple array job sample
 
-k=$SLURM_ARRAY_TASK_ID
+# Set SLURM options
+#SBATCH --job-name=array_factor                 # Job name
+#SBATCH --output=array_factor-%A-%a.out        # Standard output and error log
+#SBATCH --mail-user=username@middlebury.edu     # Where to send mail	
+#SBATCH --mail-type=NONE                        # Mail events (NONE, BEGIN, END, FAIL, ALL)
+#SBATCH --cpus-per-task=1                       # Run each array job on a single core
+#SBATCH --mem=2gb                               # Job memory request
+#SBATCH --partition=standard                    # Partition (queue) 
+#SBATCH --time=00:15:00                         # Time limit hrs:min:sec
+#SBATCH --array=0,1000                             # Array range: stets number of array jobs
 
-python Symmetry_Finder.py -N 8 -seed 0 -seed_range 1000 -max_energy 1
+# print SLURM envirionment variables
+echo "Job ID: ${SLURM_JOB_ID}"
+echo "Array ID: ${SLURM_ARRAY_TASK_ID}"
+echo "Node: ${SLURMD_NODENAME}"
+echo "Starting: "`date +"%D %T"`
+
+# Your calculations here
+python Symmetry_Finder.py -N 8 -seed ${SLURM_ARRAY_TASK_ID} -seed_range 1000 -max_energy 1
+# End of job info
+echo "Ending:   "`date +"%D %T"`
